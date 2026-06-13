@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}{{ collection.title }}{% endblock %}
+{% block content %}
+<section class="page-head">
+    <h1>{{ collection.title }}</h1>
+    <a class="button muted" href="{{ url_for('collections') }}">Назад к подборкам</a>
+</section>
+
+{% if books %}
+    <div class="book-grid">
+        {% for book in books %}
+            <article class="book-card">
+                <img src="{{ url_for('cover', book_id=book.id) }}" alt="Обложка книги {{ book.title }}">
+                <div>
+                    <h2>{{ book.title }}</h2>
+                    <p>{{ book.author }}, {{ book.year }}</p>
+                    <p class="muted-text">{{ book.genres or "Жанры не указаны" }}</p>
+                    <a class="button small" href="{{ url_for('book_detail', book_id=book.id) }}">Просмотр</a>
+                </div>
+            </article>
+        {% endfor %}
+    </div>
+{% else %}
+    <p class="muted-text">В этой подборке пока нет книг.</p>
+{% endif %}
+{% endblock %}
