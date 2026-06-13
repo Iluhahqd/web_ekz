@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block title %}{{ book.title }}{% endblock %}
+{% block content %}
+<section class="book-view">
+    <img class="cover" src="{{ url_for('cover', book_id=book.id) }}" alt="Обложка книги {{ book.title }}">
+    <div>
+        <h1>{{ book.title }}</h1>
+        <dl class="details">
+            <dt>Автор</dt><dd>{{ book.author }}</dd>
+            <dt>Год</dt><dd>{{ book.year }}</dd>
+            <dt>Издательство</dt><dd>{{ book.publisher }}</dd>
+            <dt>Объём</dt><dd>{{ book.pages }} стр.</dd>
+            <dt>Жанры</dt><dd>{{ genres | map(attribute="name") | join(", ") }}</dd>
+        </dl>
+        <div class="markdown">{{ book.description | markdown | safe }}</div>
+        <div class="actions">
+            {% if is_user %}
+                <button class="button" type="button" data-dialog-open="add-to-collection">Добавить в подборку</button>
+            {% endif %}
+            {% if is_admin or is_moderator %}
+                <a class="button muted" href="{{ url_for('edit_book', book_id=book.id) }}">Редактировать</a>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+{% if is_user %}
+<dialog id="add-to-collection">
+    <h2>Добавить в подборку</h2>
+    {% if collections %}
+        <form method="post" action="{{ url_for('add_book_to_collection', book_id=book.id) }}">
+            <label>
+                Подборка
+                <select name="collection_id" required>
+                    {% for collection in collections %}
+                        <option value="{{ collection.id }}">{{ collection.title }}</option>
+                    {% endfor %}
+                </select>
+            </label>
+            <div class="dialog-actions">
+                <button class="button" type="submit">Добавить</button>
+                <button class="button muted" type="button" data-dialog-close>Отмена</button>
+            </div>
+        </form>
+    {% else %}
+        <p>Сначала создайте подборку в разделе «Мои подборки».</p>
+        <div class="dialog-actions">
+            <a class="button" href="{{ url_for('collections') }}">Мои подборки</a>
+            <button class="button muted" type="button" data-dialog-close>Отмена</button>
+        </div>
+    {% endif %}
+</dialog>
+{% endif %}
+
+<section class="section">
+    <div class="section-head">
+        <h2>Рецензии</h2>
+        {% if current_user and not user_review %}
+            <a class="button small" href="{{ url_for('add_review', book_id=book.id) }}">Написать рецензию</a>
+        {% endif %}
+    </div>
+    {% if reviews %}
+        <div class="reviews">
+            {% for review in reviews %}
+                <article class="review">
+                    <strong>{{ review.last_name }} {{ review.first_name }} {{ review.middle_name or "" }}</strong>
+                    <span>Оценка: {{ review.rating }}</span>
+                    <div class="markdown">{{ review.text | markdown | safe }}</div>
+                </article>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="muted-text">Рецензий пока нет.</p>
+    {% endif %}
+</section>
+{% endblock %}
