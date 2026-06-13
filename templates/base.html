@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Электронная библиотека{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header class="topbar">
+        <a class="brand" href="{{ url_for('index') }}">Электронная библиотека</a>
+        <nav class="nav">
+            <a href="{{ url_for('index') }}">Главная</a>
+            {% if is_user %}
+                <a href="{{ url_for('collections') }}">Мои подборки</a>
+            {% endif %}
+            {% if is_admin %}
+                <a href="{{ url_for('add_book') }}">Добавить книгу</a>
+            {% endif %}
+        </nav>
+        <div class="account">
+            {% if current_user %}
+                <span>{{ full_name(current_user) }}</span>
+                <a class="button small" href="{{ url_for('logout') }}">Выйти</a>
+            {% else %}
+                <a class="button small" href="{{ url_for('login') }}">Войти</a>
+            {% endif %}
+        </div>
+    </header>
+
+    <main class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="messages">
+                    {% for category, message in messages %}
+                        <div class="message {{ category }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="footer">
+        Невретдинов Илья Рушанович, группа 241-327
+    </footer>
+
+    <script>
+        document.querySelectorAll("[data-dialog-open]").forEach((button) => {
+            button.addEventListener("click", () => {
+                document.getElementById(button.dataset.dialogOpen).showModal();
+            });
+        });
+        document.querySelectorAll("[data-dialog-close]").forEach((button) => {
+            button.addEventListener("click", () => {
+                button.closest("dialog").close();
+            });
+        });
+    </script>
+</body>
+</html>
