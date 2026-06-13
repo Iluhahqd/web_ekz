@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Вход{% endblock %}
+{% block content %}
+<section class="page-head">
+    <h1>Вход</h1>
+</section>
+<form class="form-card narrow" method="post">
+    <label>
+        Логин
+        <input type="text" name="login" required autofocus>
+    </label>
+    <label>
+        Пароль
+        <input type="password" name="password" required>
+    </label>
+    <label class="check">
+        <input type="checkbox" name="remember">
+        Запомнить меня
+    </label>
+    <button class="button" type="submit">Войти</button>
+    <p class="hint">Тестовые пользователи: admin/admin, moderator/moderator, user/user.</p>
+</form>
+{% endblock %}
