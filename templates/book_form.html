@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% from "macros.html" import book_form %}
+{% block title %}{{ "Редактирование книги" if book else "Добавление книги" }}{% endblock %}
+{% block content %}
+<section class="page-head">
+    <h1>{{ "Редактирование книги" if book else "Добавление книги" }}</h1>
+</section>
+<form class="form-card" method="post">
+    {{ book_form(book, genres) }}
+</form>
+{% endblock %}
