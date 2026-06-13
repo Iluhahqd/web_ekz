@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Новая рецензия{% endblock %}
+{% block content %}
+<section class="page-head">
+    <h1>Рецензия на книгу «{{ book.title }}»</h1>
+</section>
+<form class="form-card" method="post">
+    <label>
+        Оценка
+        <select name="rating" required>
+            <option value="5">отлично</option>
+            <option value="4">хорошо</option>
+            <option value="3">удовлетворительно</option>
+            <option value="2">неудовлетворительно</option>
+            <option value="1">плохо</option>
+            <option value="0">ужасно</option>
+        </select>
+    </label>
+    <label>
+        Текст рецензии
+        <textarea name="text" rows="8" required>{{ request.form.get('text', '') }}</textarea>
+    </label>
+    <div class="actions">
+        <button class="button" type="submit">Сохранить</button>
+        <a class="button muted" href="{{ url_for('book_detail', book_id=book.id) }}">Отмена</a>
+    </div>
+</form>
+{% endblock %}
